@@ -4,22 +4,22 @@ const HTTPError = require('../errors/HTTPError');
 const tokenUtils = require('../utils/jwtUtils');
 const redisUtils = require('../utils/redisUtil');
 
-const createUser = async (username, password) => {
-  const findUser = await Users.findOne({ where: { username } });
+const createUser = async (email, password) => {
+  const findUser = await Users.findOne({ where: { email } });
   if (findUser) {
     throw new HTTPError('User already exists', 409);
   }
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   const user = await Users.create({
-    username,
+    email,
     password: hashedPassword,
   });
   return user;
 };
 
-const loginUser = async (username, password) => {
-  const user = await Users.findOne({ where: { username } });
+const loginUser = async (email, password) => {
+  const user = await Users.findOne({ where: { email } });
 
   if (!user) throw new HTTPError('User not found', 401);
   const isPasswordCorect = await bcrypt.compare(password, user.password);

@@ -6,7 +6,7 @@ describe('Testing Validation Middleware', () => {
     it('should validate the body', async () => {
       const mockreq = {
         body: {
-          username: 'test',
+          email: 'test',
           password: 'testingg',
         },
       };

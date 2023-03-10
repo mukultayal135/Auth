@@ -6,20 +6,19 @@ const redisClient = redis.createClient({
     port: 6379,
   },
 });
+redisClient.connect();
 
 redisClient.on('error', (err) => {
   console.log('Redis Connection error: ', err.message);
 });
-const storeToken = async (token) => {
-  redisClient.connect();
-  await redisClient.set(token, '1', 'EX', 3600);
-  redisClient.disconnect();
+const storeToken = async (token, username) => {
+  await redisClient.set(username, token, 'EX', 3600);
+  // redisClient.disconnect();
 };
-const getToken = async (token) => {
-  redisClient.connect();
-  const redisToken = await redisClient.get(token);
-  redisClient.disconnect();
-  return redisToken;
+const getToken = async (username) => {
+  const token = await redisClient.get(username);
+  // redisClient.disconnect();
+  return token;
 };
 
 module.exports = { storeToken, getToken };
